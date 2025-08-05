@@ -1,50 +1,54 @@
-# Tagdown: Otimize suas Redes Sociais com Inteligência Artificial
-
-
+# Tagdown: Baixe Vídeos e Imagens do Instagram e TikTok
 
 ## 🚀 Sobre o Projeto
 
-O Tagdown é uma aplicação web inovadora projetada para criadores de conteúdo, influenciadores e agências de marketing que buscam otimizar sua presença no Instagram e TikTok. Com uma interface intuitiva e recursos poderosos, o Tagdown simplifica a criação de legendas e a busca por hashtags relevantes, utilizando inteligência artificial para maximizar o alcance e o engajamento.
+O Tagdown é uma aplicação web poderosa e intuitiva que permite aos usuários baixar vídeos, imagens e até mesmo extrair áudio de publicações do Instagram e TikTok de forma simples e rápida. Basta colar um link de um post, reel, vídeo do TikTok ou o nome de um perfil do Instagram para visualizar e baixar o conteúdo desejado.
 
-Este projeto foi desenvolvido como parte do meu portfólio, demonstrando minhas habilidades em desenvolvimento full-stack com tecnologias modernas e foco na experiência do usuário.
+Este projeto foi desenvolvido para demonstrar minhas habilidades em desenvolvimento full-stack, integrando serviços externos, construindo uma interface de usuário reativa e um backend proxy para lidar com requisições a APIs de terceiros.
 
-## ✨ Funcionalidades
+## ✨ Funcionalidades Principais
 
-*   **Gerador de Legendas com IA:** Crie legendas criativas e personalizadas para suas postagens com o poder da inteligência artificial.
-*   **Buscador de Hashtags Inteligente:** Encontre as hashtags mais relevantes e populares para o seu nicho, aumentando a visibilidade do seu conteúdo.
-*   **Análise de Popularidade:** Obtenha insights sobre a popularidade de hashtags específicas para tomar decisões mais estratégicas.
-*   **Interface Moderna e Intuitiva:** Uma experiência de usuário fluida e agradável, construída com as melhores práticas de design.
-*   **Autenticação Segura:** Login com contas do Google para uma experiência personalizada e segura.
+*   **Download de Mídia do Instagram:**
+    *   Baixe fotos e vídeos de posts com apenas um clique.
+    *   Insira um nome de usuário para visualizar todos os posts e baixar individualmente.
+    *   Suporte para posts de imagem, vídeo e reels.
+*   **Download de Vídeos do TikTok:**
+    *   Cole o link de um vídeo do TikTok para baixá-lo em alta qualidade.
+*   **Extração de Áudio:**
+    *   Converta vídeos do Instagram e TikTok para arquivos de áudio MP3 e baixe-os diretamente.
+*   **Interface Intuitiva:**
+    *   Uma interface limpa que permite colar o link e visualizar o conteúdo rapidamente.
+    *   Preview da mídia antes de baixar.
+*   **Autenticação de Usuários:**
+    *   Login com Google para gerenciar o uso e limites de requisição.
+*   **Histórico e Limites:**
+    *   Sistema de controle de requisições para usuários logados e não logados.
 
 ## 🛠️ Tecnologias Utilizadas
 
-O projeto é dividido em duas partes principais: o frontend e o backend.
+O projeto é uma aplicação full-stack com um frontend moderno e um backend que atua como um proxy.
 
 ### Frontend
 
-*   **React:** Biblioteca para construção de interfaces de usuário.
-*   **Vite:** Ferramenta de build extremamente rápida para desenvolvimento frontend.
-*   **TypeScript:** Superset do JavaScript que adiciona tipagem estática.
-*   **Framer Motion:** Para animações ricas e fluidas.
-*   **Axios:** Cliente HTTP para realizar requisições às APIs.
-*   **Marked:** Para renderização de conteúdo em Markdown.
-*   **Lucide React:** Biblioteca de ícones.
+*   **React:** Biblioteca para construção da interface de usuário.
+*   **Vite:** Ferramenta de build para um desenvolvimento frontend ágil.
+*   **TypeScript:** Para um código mais robusto e seguro com tipagem estática.
+*   **CSS Modules:** Para estilização de componentes de forma isolada.
+*   **Axios:** Cliente HTTP para realizar requisições.
+*   **Firebase (Client SDK):** Para autenticação de usuários.
 
 ### Backend
 
-*   **Node.js:** Ambiente de execução JavaScript no servidor.
-*   **Express:** Framework minimalista para aplicações web em Node.js.
-*   **CORS:** Para habilitar requisições de diferentes origens.
-*   **Dotenv:** Para gerenciar variáveis de ambiente.
-*   **Axios:** Para realizar requisições a APIs externas (Instagram, TikTok, etc.).
+*   **Node.js & Express:** Para criar o servidor proxy.
+*   **CORS:** Para permitir requisições do frontend.
+*   **Dotenv:** Para gerenciamento de variáveis de ambiente.
+*   **Axios:** Para fazer as requisições para as APIs do Instagram e TikTok.
+*   **FFmpeg:** Utilizado no backend para a conversão de vídeo para áudio.
 
 ### Infraestrutura e Serviços
 
-*   **Firebase/Firestore:** Para autenticação de usuários e armazenamento de dados.
-
-## 🎨 Design e UI
-
-A interface do Tagdown foi projetada para ser limpa, moderna e fácil de usar. A combinação de cores, a tipografia e os elementos visuais foram cuidadosamente escolhidos para proporcionar uma experiência agradável e profissional. As animações, implementadas com Framer Motion, adicionam um toque de dinamismo e interatividade.
+*   **Firebase Authentication:** Para o sistema de login com Google.
+*   **Firestore:** Potencialmente para armazenar dados do usuário e controle de requisições.
 
 ## 👨‍💻 Como Executar o Projeto
 
@@ -54,6 +58,7 @@ Siga os passos abaixo para executar o projeto em seu ambiente local.
 
 *   [Node.js](https://nodejs.org/en/) (versão 18 ou superior)
 *   [Yarn](https://yarnpkg.com/) ou [npm](https://www.npmjs.com/)
+*   [FFmpeg](https://ffmpeg.org/download.html) instalado no ambiente do backend (necessário para a conversão de áudio).
 
 ### Instalação e Execução
 
@@ -70,10 +75,10 @@ Siga os passos abaixo para executar o projeto em seu ambiente local.
     ```
 
 3.  **Configure as variáveis de ambiente do Backend:**
-    Crie um arquivo `.env` na pasta `tagdown-backend` e adicione as chaves de API necessárias.
+    Crie um arquivo `.env` na pasta `tagdown-backend`.
     ```
     PORT=3001
-    # Adicione outras chaves de API aqui (ex: API_KEY_TIKTOK, etc.)
+    # Outras chaves de API, se houver
     ```
 
 4.  **Inicie o Backend:**
@@ -88,7 +93,7 @@ Siga os passos abaixo para executar o projeto em seu ambiente local.
     ```
 
 6.  **Configure as variáveis de ambiente do Frontend:**
-    Crie um arquivo `.env` na pasta `tagdown-frontend` e adicione as configurações do Firebase.
+    Crie um arquivo `.env` na pasta `tagdown-frontend` com suas credenciais do Firebase.
     ```
     VITE_FIREBASE_API_KEY=SUA_API_KEY
     VITE_FIREBASE_AUTH_DOMAIN=SEU_AUTH_DOMAIN
@@ -103,7 +108,7 @@ Siga os passos abaixo para executar o projeto em seu ambiente local.
     npm run dev
     ```
 
-A aplicação estará disponível em `http://localhost:5173`.
+A aplicação estará disponível em `http://localhost:5173` (ou outra porta definida pelo Vite).
 
 ## 📞 Contato
 
