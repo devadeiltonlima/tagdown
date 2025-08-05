@@ -4,12 +4,12 @@ import { getFirestore, collection, addDoc, Timestamp, doc, setDoc, getDoc, delet
 
 // Configuração do Firebase
 const firebaseConfig = {
-  apiKey: "AIzaSyCyYkBkyHD_yF0Oo4rMCqy1KGAFdYgOMH0",
-  authDomain: "liikmaprojectflow.firebaseapp.com",
-  projectId: "liikmaprojectflow",
-  storageBucket: "liikmaprojectflow.firebasestorage.app",
-  messagingSenderId: "367027021739",
-  appId: "1:367027021739:web:570d93ac423e7dd8a154ee"
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
 // Inicializa o Firebase
