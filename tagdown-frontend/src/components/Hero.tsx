@@ -5,6 +5,8 @@ import { getProfileData, getPostDownloadLink, getPostInfo, getUserPosts } from '
 import { getTikTokVideo } from '../services/tiktokService';
 import styles from './Hero.module.css';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 interface HeroProps {
   updateRequestStatus: () => void;
   user: User | null;
@@ -196,7 +198,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
 
     try {
       // Usando o nosso backend como proxy
-      const response = await fetch(`http://localhost:3001/proxy?url=${encodeURIComponent(mediaUrl)}`);
+      const response = await fetch(`${BASE_URL}/proxy?url=${encodeURIComponent(mediaUrl)}`);
       if (!response.ok) {
         throw new Error('Falha ao buscar a mídia pelo proxy do backend.');
       }
@@ -236,7 +238,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3001/proxy?url=${encodeURIComponent(downloadUrl)}`);
+      const response = await fetch(`${BASE_URL}/proxy?url=${encodeURIComponent(downloadUrl)}`);
       if (!response.ok) {
         throw new Error('Falha ao buscar a mídia para download.');
       }
@@ -261,7 +263,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:3001/convert-to-audio?url=${encodeURIComponent(videoUrl)}`);
+      const response = await fetch(`${BASE_URL}/convert-to-audio?url=${encodeURIComponent(videoUrl)}`);
       if (!response.ok) {
         throw new Error('Falha ao converter o vídeo para áudio.');
       }
@@ -330,9 +332,9 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
         <div className={`${styles.resultContainer} ${profileData || postData || tiktokData ? styles.show : ''}`}>
           {profileData && (
             <div className={styles.profileSection}>
-              <div className={styles.profileHeader}>
+                            <div className={styles.profileHeader}>
                 <img 
-                  src={`http://localhost:3001/proxy?url=${encodeURIComponent(profileData.profile_pic_url_hd || profileData.profile_pic_url)}`} 
+                  src={`${BASE_URL}/proxy?url=${encodeURIComponent(profileData.profile_pic_url_hd || profileData.profile_pic_url)}`} 
                   alt={profileData.full_name} 
                   className={styles.profilePic} 
                 />
@@ -361,7 +363,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
                   return (
                     <div key={post.id} className={styles.postCard}>
                       <img 
-                        src={`http://localhost:3001/proxy?url=${encodeURIComponent(thumbnailUrl)}`} 
+                        src={`${BASE_URL}/proxy?url=${encodeURIComponent(thumbnailUrl)}`} 
                         alt={`Post by ${profileData.username}`} 
                         className={styles.postImage} 
                       />

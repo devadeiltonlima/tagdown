@@ -1,5 +1,7 @@
 import { auth } from './firebaseService';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 const getHeaders = () => {
   const headers = new Headers();
   const user = auth.currentUser;
@@ -12,7 +14,7 @@ const getHeaders = () => {
 };
 
 export const getProfileData = async (username: string) => {
-  const url = `http://localhost:3001/instagram-profile?username=${username}`;
+  const url = `${BASE_URL}/instagram-profile?username=${username}`;
   const headers = getHeaders();
 
   try {
@@ -32,7 +34,7 @@ export const getProfileData = async (username: string) => {
 };
 
 export const getPostDownloadLink = async (postUrl: string) => {
-  const url = `http://localhost:3001/instagram-post-dl?url=${encodeURIComponent(postUrl)}`;
+  const url = `${BASE_URL}/instagram-post-dl?url=${encodeURIComponent(postUrl)}`;
   const headers = getHeaders();
 
   try {
@@ -52,7 +54,7 @@ export const getPostDownloadLink = async (postUrl: string) => {
 };
 
 export const getPostInfo = async (postUrl: string) => {
-  const url = `http://localhost:3001/instagram-post-info?url=${encodeURIComponent(postUrl)}`;
+  const url = `${BASE_URL}/instagram-post-info?url=${encodeURIComponent(postUrl)}`;
   const headers = getHeaders();
 
   try {
@@ -72,7 +74,7 @@ export const getPostInfo = async (postUrl: string) => {
 };
 
 export const getUserPosts = async (username: string) => {
-  const url = `http://localhost:3001/instagram-posts?username=${username}`;
+  const url = `${BASE_URL}/instagram-posts?username=${username}`;
   const headers = getHeaders();
 
   try {

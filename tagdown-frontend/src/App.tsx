@@ -7,6 +7,8 @@ import Login from './components/Login/Login';
 import FloatingAI from './components/FloatingAI';
 import { getUserAvatar, auth as firebaseAuth } from './services/firebaseService';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 interface RequestStatus {
   limit: number;
   remaining: number;
@@ -31,7 +33,7 @@ function App() {
     headers.append('x-user-id', user.uid);
 
     try {
-      const response = await fetch('http://localhost:3001/request-status', { headers });
+      const response = await fetch(`${BASE_URL}/request-status`, { headers });
       if (response.ok) {
         const data = await response.json();
         setRequestStatus(data);

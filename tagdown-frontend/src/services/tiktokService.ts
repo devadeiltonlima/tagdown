@@ -1,5 +1,7 @@
 import { auth } from './firebaseService';
 
+const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
 const getHeaders = () => {
   const headers = new Headers();
   const user = auth.currentUser;
@@ -12,7 +14,7 @@ const getHeaders = () => {
 };
 
 export const getTikTokVideo = async (videoUrl: string) => {
-  const url = `http://localhost:3001/tiktok-video?url=${encodeURIComponent(videoUrl)}`;
+  const url = `${BASE_URL}/tiktok-video?url=${encodeURIComponent(videoUrl)}`;
   const headers = getHeaders();
 
   try {

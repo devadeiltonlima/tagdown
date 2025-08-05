@@ -225,6 +225,5 @@ app.get('/convert-to-audio', (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Backend proxy server listening at http://localhost:${port}`);
-});
+// Export the app for Vercel
+module.exports = app;
