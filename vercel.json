@@ -6,21 +6,23 @@
       "use": "@vercel/node"
     },
     {
-      "src": "tagdown-frontend/package.json",
+      "src": "tagdown-frontend/vite.config.ts",
       "use": "@vercel/static-build",
-      "config": {
-        "distDir": "dist"
-      }
+      "config": { "distDir": "dist" }
     }
   ],
   "routes": [
     {
-      "src": "/(proxy|convert-to-audio|request-status)(.*)",
-      "dest": "/tagdown-backend/index.js"
+      "src": "/api/(.*)",
+      "dest": "tagdown-backend/index.js"
     },
     {
       "src": "/(.*)",
-      "dest": "/tagdown-frontend/dist/$1"
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
