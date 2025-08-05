@@ -1,0 +1,84 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background-color: #FFFFFF;
+  color: #29332F;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #00B375;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #aaa;
+  line-height: 1;
+}
+
+.closeButton:hover {
+  color: #333;
+}
+
+.content {
+  padding: 1.5rem;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.content h2 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #00B375;
+    padding-bottom: 0.5rem;
+}
+
+.content p,
+.content ul {
+  margin-bottom: 1rem;
+}
+
+.content ul {
+  padding-left: 1.5rem;
+}
+
+.content a {
+  color: #00B375;
+  text-decoration: none;
+}
+
+.content a:hover {
+  text-decoration: underline;
+}

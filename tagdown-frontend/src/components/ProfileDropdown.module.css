@@ -1,0 +1,153 @@
+.dropdown {
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #055227; /* Fundo cinza escuro, como na imagem */
+    border-radius: 8px;
+    padding: var(--space-md);
+    width: 300px;
+    box-shadow: none; /* Removido a sombra para um visual mais limpo */
+    border: none; /* Removido a borda */
+    color: var(--white);
+    z-index: 1000;
+    /* Efeito glass removido */
+  }
+  
+  .profileHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-md);
+  }
+  
+  .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #555; /* Fundo do avatar cinza */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-right: var(--space-sm);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%; /* Garante que a imagem seja circular */
+  }
+  
+  .loader {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #3498db;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .email {
+    font-size: 14px;
+    color: #aaa;
+  }
+  
+  .formGroup {
+    margin-bottom: var(--space-md);
+  }
+  
+  .formGroup label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  .input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #555;
+    border-radius: 4px;
+    background-color: #333;
+    color: #f0f0f0;
+    font-size: 14px;
+  }
+  
+  .requestsInfo {
+    margin-bottom: var(--space-md);
+  }
+  
+  .requestsInfo p {
+    margin: 0 0 var(--space-xs);
+    font-size: 14px;
+    color: #ccc;
+  }
+  
+  .requestsBar {
+    width: 100%;
+    height: 10px;
+    background-color: #444;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: var(--space-xs);
+  }
+  
+  .requestsBarFill {
+    height: 100%;
+    background-color: var(--green-main);
+    transition: width 0.3s ease;
+  }
+  
+  .requestsInfo span {
+    font-size: 12px;
+    color: #aaa;
+  }
+  
+  .actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-sm);
+  }
+  
+  .button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  .saveButton {
+    background-color: var(--green-main);
+    color: var(--white);
+  }
+  
+  .saveButton:hover {
+    background-color: var(--green-dark);
+  }
+  
+  .logoutButton {
+    background-color: #f44336; /* Vermelho original */
+    color: white;
+  }
+  
+  .logoutButton:hover {
+    background-color: #e53935; /* Vermelho mais escuro no hover */
+  }
+  
+  .successMessage {
+    color: var(--green-main);
+    font-size: 12px;
+    margin-top: var(--space-xs);
+  }

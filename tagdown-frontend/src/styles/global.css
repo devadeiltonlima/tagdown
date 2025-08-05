@@ -1,0 +1,132 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --green-main: #00B375;
+  --green-dark: #197F5C;
+  --dark-gray: #29332F;
+  --white: #FFFFFF;
+  --black: #000000;
+  
+  /* Luxurious color variations */
+  --green-glow: rgba(0, 179, 117, 0.4);
+  --green-subtle: rgba(0, 179, 117, 0.1);
+  --white-glass: rgba(255, 255, 255, 0.08);
+  --white-subtle: rgba(255, 255, 255, 0.6);
+  --shadow-dark: rgba(0, 0, 0, 0.3);
+  --shadow-light: rgba(0, 0, 0, 0.1);
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  
+  /* Spacing scale */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-xxl: 4rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: linear-gradient(135deg, var(--dark-gray) 0%, #1a1f1d 100%);
+  color: var(--white);
+  font-family: var(--font-family);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+/* Luxurious glass effects */
+.glass {
+  background: linear-gradient(135deg, var(--white-glass), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+}
+
+.glass-strong {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(30px);
+  border-radius: 20px;
+}
+
+/* Smooth transitions */
+* {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+button {
+  cursor: pointer;
+  border: 0;
+  border-radius: 12px;
+  font-family: var(--font-family);
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--white);
+  font-weight: 300;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Custom container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Smooth animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Focus styles */
+*:focus {
+  outline: 2px solid var(--green-main);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--green-subtle);
+  color: var(--green-main);
+}

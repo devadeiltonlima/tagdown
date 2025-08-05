@@ -1,0 +1,66 @@
+.features {
+  padding: 6rem 0;
+  background-color: #252d29; /* Um tom ligeiramente mais claro que o fundo */
+}
+
+.container {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+.title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--white);
+  margin-bottom: 4rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.card {
+  background-color: var(--dark-gray);
+  padding: 2.5rem 2rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  color: var(--white);
+  margin-top: 1.5rem;
+}
+
+.cardDescription {
+  color: var(--white);
+  opacity: 0.7;
+  margin-top: 0.75rem;
+  line-height: 1.6;
+}
+
+.cardButton {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  background-color: var(--green-main);
+  color: var(--white);
+  font-weight: bold;
+  transition: background-color 0.2s;
+}
+
+.cardButton:hover {
+  background-color: var(--green-dark);
+}

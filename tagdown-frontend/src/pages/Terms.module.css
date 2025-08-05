@@ -1,0 +1,44 @@
+.container {
+  background-color: #FFFFFF;
+  color: #29332F;
+  padding: 2rem;
+  max-width: 800px;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.container h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #00B375;
+}
+
+.container h2 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+  border-bottom: 2px solid #00B375;
+  padding-bottom: 0.5rem;
+}
+
+.container p,
+.container ul {
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.container ul {
+  padding-left: 1.5rem;
+}
+
+.container a {
+  color: #00B375;
+  text-decoration: none;
+}
+
+.container a:hover {
+  text-decoration: underline;
+}
