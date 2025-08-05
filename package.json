@@ -1,8 +1,9 @@
 {
-  "dependencies": {
-    "@ffmpeg-installer/ffmpeg": "^1.1.0",
-    "browser-image-compression": "^2.0.2",
-    "firebase": "^12.0.0",
-    "fluent-ffmpeg": "^2.1.3"
-  }
+  "name": "tagdown-monorepo",
+  "private": true,
+  "scripts": {
+    "postinstall": "cd tagdown-backend && npm install && cd ../tagdown-frontend && npm install",
+    "build": "cd tagdown-frontend && npm run build"
+  },
+  "dependencies": {}
 }
