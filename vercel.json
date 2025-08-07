@@ -17,7 +17,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/tagdown-frontend/index.html"
     }
   ]
 }
