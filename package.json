@@ -2,8 +2,7 @@
   "name": "tagdown-monorepo",
   "private": true,
   "scripts": {
-    "postinstall": "cd tagdown-backend && npm install && cd ../tagdown-frontend && npm install",
-    "build": "cd tagdown-frontend && npm run build"
+    "postinstall": "cd tagdown-backend && npm install && cd ../tagdown-frontend && npm install"
   },
   "dependencies": {}
 }
