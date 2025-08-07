@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import type { User } from 'firebase/auth';
 import { Home } from './pages/Home';
@@ -16,11 +16,20 @@ interface RequestStatus {
 }
 
 function App() {
+  return (
+    <Router>
+      <Main />
+    </Router>
+  );
+}
+
+function Main() {
   const [user, setUser] = useState<User | null>(null);
   const [avatar, setAvatar] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [requestStatus, setRequestStatus] = useState<RequestStatus | null>(null);
   const auth = getAuth();
+  const location = useLocation();
 
   const fetchRequestStatus = useCallback(async () => {
     const user = firebaseAuth.currentUser;
@@ -66,24 +75,22 @@ function App() {
 
   return (
     <>
-      <Router>
-        <Routes>
-          <Route 
-            path="/" 
-            element={
-              <Home 
-                user={user} 
-                avatar={avatar} 
-                setAvatar={setAvatar}
-                requestStatus={requestStatus}
-                updateRequestStatus={fetchRequestStatus}
-              />
-            } 
-          />
-          <Route path="/login" element={<Login />} />
-        </Routes>
-      </Router>
-      <FloatingAI user={user} requestStatus={requestStatus} />
+      <Routes>
+        <Route 
+          path="/" 
+          element={
+            <Home 
+              user={user} 
+              avatar={avatar} 
+              setAvatar={setAvatar}
+              requestStatus={requestStatus}
+              updateRequestStatus={fetchRequestStatus}
+            />
+          } 
+        />
+        <Route path="/login" element={<Login />} />
+      </Routes>
+      {location.pathname !== '/login' && <FloatingAI user={user} requestStatus={requestStatus} />}
     </>
   );
 }
