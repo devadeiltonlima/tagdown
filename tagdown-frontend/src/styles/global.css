@@ -6,6 +6,12 @@
   --dark-gray: #29332F;
   --white: #FFFFFF;
   --black: #000000;
+
+  /* Cores para ações e alertas */
+  --red-500: #f44336;
+  --red-600: #e53935;
+  --yellow-500: #ffeb3b;
+  --blue-500: #2196f3;
   
   /* Luxurious color variations */
   --green-glow: rgba(0, 179, 117, 0.4);

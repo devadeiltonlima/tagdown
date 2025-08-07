@@ -1,8 +1,9 @@
 import { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import type { User } from 'firebase/auth';
 import { Link } from 'react-router-dom';
-import { getProfileData, getPostDownloadLink, getPostInfo, getUserPosts } from '../services/instagramService';
+import { fetchInstagramData } from '../services/instagramService';
 import { getTikTokVideo } from '../services/tiktokService';
+import { InstagramPost } from './InstagramPost';
 import styles from './Hero.module.css';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
@@ -11,7 +12,6 @@ interface HeroProps {
   updateRequestStatus: () => void;
   user: User | null;
 }
-
 export interface HeroHandle {
   focusInput: () => void;
 }
@@ -29,6 +29,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
   const [profileData, setProfileData] = useState<any>(null);
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [postData, setPostData] = useState<any>(null);
+  const [carouselMedia, setCarouselMedia] = useState<any[]>([]);
   const [tiktokData, setTiktokData] = useState<any>(null);
   const [mediaBlobUrl, setMediaBlobUrl] = useState<string | null>(null);
   const [isMediaLoading, setIsMediaLoading] = useState(false);
@@ -52,12 +53,13 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
     setProfileData(null);
     setUserPosts([]);
     setPostData(null);
+    setCarouselMedia([]);
     setTiktokData(null);
     setMediaBlobUrl(null);
 
     try {
       const isTikTokLink = inputValue.includes('tiktok.com');
-      const isInstagramPostLink = inputValue.includes('/p/') || inputValue.includes('/reel/');
+      const isInstagramLink = inputValue.includes('instagram.com');
 
       if (isTikTokLink) {
         const response = await getTikTokVideo(inputValue);
@@ -67,95 +69,41 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
         } else {
           setError(response.msg || 'Não foi possível obter os dados do vídeo do TikTok.');
         }
-      } else if (isInstagramPostLink) {
-        let cleanUrl = inputValue.split('?')[0];
-        if (cleanUrl.endsWith('/')) {
-          cleanUrl = cleanUrl.slice(0, -1);
+      } else if (isInstagramLink) {
+        const postResponse = await fetchInstagramData(inputValue);
+        
+        // Se a resposta contém dados de um post
+        if (postResponse.type === 'album' && Array.isArray(postResponse.medias)) {
+          setCarouselMedia(postResponse.medias);
+          setPostData(postResponse); // Armazena os dados gerais do post
+          setMediaBlobUrl(null); // Limpa a mídia única
+        } else if (postResponse.download_url) {
+          setPostData({
+            ...postResponse,
+            id: postResponse.shortcode, // Usando shortcode como id
+            media_type: postResponse.type,
+            media_url: postResponse.download_url,
+            thumbnail_src: postResponse.thumb,
+          });
+          handleShowMedia(postResponse.download_url);
         }
-
-        let postResult = null;
-
-        try {
-          const dataDl = await getPostDownloadLink(cleanUrl);
-          const postDl = Array.isArray(dataDl) ? dataDl.find(item => item.media_type === 'video') || dataDl[0] : dataDl;
-          if (postDl && postDl.media_url) {
-            postResult = { ...postDl, thumbnail_src: postDl.thumbnail_src || postDl.media_url };
-          } else {
-            throw new Error('Resposta inválida do /post-dl, tentando fallback.');
-          }
-        } catch (error) {
-          console.warn('Fallback para /post ativado após falha em /post-dl:', error);
-          const dataInfo = await getPostInfo(cleanUrl);
-          const postInfo = Array.isArray(dataInfo) ? dataInfo[0] : dataInfo;
-          if (postInfo && (postInfo.video_url || postInfo.display_url)) {
-            postResult = {
-              id: postInfo.id,
-              media_type: postInfo.is_video ? 'video' : 'image',
-              media_url: postInfo.is_video ? postInfo.video_url : postInfo.display_url,
-              thumbnail_src: postInfo.thumbnail_src || postInfo.display_url,
-            };
-          }
-        }
-
-        if (postResult) {
-          setPostData(postResult);
-          if (postResult.media_type === 'video' || postResult.media_type === 'image') {
-            handleShowMedia(postResult.media_url);
-          }
+        // Se a resposta contém dados de um perfil
+        else if (postResponse.Userinfo) {
+          setProfileData(postResponse.Userinfo);
+          // A API de perfil não retorna os posts, então limpamos os posts antigos
+          setUserPosts([]);
         } else {
-          setError('Não foi possível encontrar a publicação em nenhum dos endpoints.');
+          setError('Não foi possível obter os dados do Instagram. Verifique o link ou nome de usuário.');
         }
       } else {
-        const usernameMatch = inputValue.match(/(?:instagram\.com\/)([a-zA-Z0-9_.]+)/);
-        const searchUsername = usernameMatch ? usernameMatch[1] : inputValue;
-
-        const [profileResponse, postsResponse] = await Promise.all([
-          getProfileData(searchUsername),
-          getUserPosts(searchUsername)
-        ]);
-
-        let userProfile = null;
-        if (profileResponse) {
-          if (profileResponse.data && profileResponse.data.user) {
-            userProfile = profileResponse.data.user;
-          } else if (profileResponse.user) {
-            userProfile = profileResponse.user;
-          } else if (profileResponse.data && profileResponse.data.username) {
-            userProfile = profileResponse.data;
-          } else if (profileResponse.username) {
-            userProfile = profileResponse;
-          }
-        }
-
-        if (userProfile) {
-          setProfileData(userProfile);
+        // Trata como nome de usuário do Instagram por padrão se não for um link
+        const response = await fetchInstagramData(inputValue);
+        if (response.Userinfo) {
+          setProfileData(response.Userinfo);
+          setUserPosts([]);
         } else {
           setError('Perfil não encontrado ou privado. Verifique o nome de usuário.');
         }
-
-        let userPostsData = [];
-        if (postsResponse) {
-          // Check for the specific structure from the console log
-          if (postsResponse.data && Array.isArray(postsResponse.data.items)) {
-            userPostsData = postsResponse.data.items;
-          } 
-          // Fallbacks for other possible structures
-          else if (Array.isArray(postsResponse)) {
-            userPostsData = postsResponse;
-          } else if (postsResponse.data && Array.isArray(postsResponse.data)) {
-            userPostsData = postsResponse.data;
-          } else if (postsResponse.medias && Array.isArray(postsResponse.medias)) {
-            userPostsData = postsResponse.medias;
-          } else if (postsResponse.items && Array.isArray(postsResponse.items)) {
-            userPostsData = postsResponse.items;
-          } else if (typeof postsResponse === 'object' && postsResponse !== null) {
-            const arrayProperty = Object.values(postsResponse).find(value => Array.isArray(value));
-            if (arrayProperty) {
-              userPostsData = arrayProperty;
-            }
-          }
-        }
-        setUserPosts(userPostsData);
       }
     } catch (err: any) {
       console.error(err);
@@ -171,7 +119,9 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
       }
     } finally {
       setLoading(false);
-      updateRequestStatus();
+      if (user) {
+        updateRequestStatus();
+      }
     }
   };
 
@@ -214,20 +164,37 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
     }
   };
 
-  const handleDownload = (url: string, filename: string) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownload = async (url: string, filename: string) => {
+    setDownloadingPostId(filename); // Usa o nome do arquivo como ID de download
+    setError(null);
+
+    try {
+      const response = await fetch(`${BASE_URL}/proxy?url=${encodeURIComponent(url)}`);
+      if (!response.ok) {
+        throw new Error('Falha ao buscar a mídia para download.');
+      }
+      const blob = await response.blob();
+      const blobUrl = URL.createObjectURL(blob);
+      
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+
+    } catch (err: any) {
+      console.error(err);
+      setError(err.message || 'Ocorreu um erro ao tentar baixar a mídia.');
+    } finally {
+      setDownloadingPostId(null);
+    }
   };
 
   const handlePostDownload = async (post: any) => {
-    const isVideo = post.is_video || post.media_type === 2 || post.media_type === 'video';
-    const downloadUrl = isVideo 
-      ? (post.video_versions?.[0]?.url || post.video_url)
-      : (post.image_versions2?.candidates?.[0]?.url || post.display_url || post.thumbnail_url);
+    const isVideo = post.is_video;
+    const downloadUrl = isVideo ? post.video_url : post.display_url;
 
     if (!downloadUrl) {
       setError('URL para download não encontrada.');
@@ -334,7 +301,7 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
             <div className={styles.profileSection}>
                             <div className={styles.profileHeader}>
                 <img 
-                  src={`${BASE_URL}/proxy?url=${encodeURIComponent(profileData.profile_pic_url_hd || profileData.profile_pic_url)}`} 
+                  src={`${BASE_URL}/proxy?url=${encodeURIComponent(profileData.picture)}`} 
                   alt={profileData.full_name} 
                   className={styles.profilePic} 
                 />
@@ -342,72 +309,52 @@ export const Hero = forwardRef<HeroHandle, HeroProps>(({ updateRequestStatus, us
                   <h3>{profileData.full_name}</h3>
                   <p>@{profileData.username}</p>
                   <div className={styles.profileStats}>
-                    <span><strong>{profileData.media_count || 0}</strong> posts</span>
-                    <span><strong>{(profileData.follower_count || profileData.followers || 0).toLocaleString('pt-BR')}</strong> seguidores</span>
-                    <span><strong>{(profileData.following_count || profileData.following || 0).toLocaleString('pt-BR')}</strong> seguindo</span>
+                    <span><strong>{profileData.posts || 0}</strong> posts</span>
+                    <span><strong>{(profileData.followers || 0).toLocaleString('pt-BR')}</strong> seguidores</span>
+                    <span><strong>{(profileData.following || 0).toLocaleString('pt-BR')}</strong> seguindo</span>
                   </div>
                 </div>
               </div>
 
-              <div className={styles.postsGrid}>
-                {userPosts.map((post: any) => {
-                  const thumbnailUrl = post.thumbnail_url 
-                                    || post.image_versions2?.candidates?.[0]?.url 
-                                    || post.carousel_media?.[0]?.image_versions2?.candidates?.[0]?.url 
-                                    || post.display_url;
+              {userPosts && userPosts.length > 0 && (
+                <div className={styles.postsGrid}>
+                  {userPosts.map((post: any) => {
+                    const thumbnailUrl = post.thumbnail_src || post.display_url;
 
-                  if (!thumbnailUrl) {
-                    return null;
-                  }
+                    if (!thumbnailUrl) {
+                      return null;
+                    }
 
-                  return (
-                    <div key={post.id} className={styles.postCard}>
-                      <img 
-                        src={`${BASE_URL}/proxy?url=${encodeURIComponent(thumbnailUrl)}`} 
-                        alt={`Post by ${profileData.username}`} 
-                        className={styles.postImage} 
-                      />
-                      <div className={styles.postOverlay}>
-                        <button
-                          onClick={() => handlePostDownload(post)}
-                          disabled={downloadingPostId === post.id}
-                          className={styles.downloadButton}
-                        >
-                          {downloadingPostId === post.id ? 'Baixando...' : 'Baixar'}
-                        </button>
+                    return (
+                      <div key={post.id} className={styles.postCard}>
+                        <img 
+                          src={`${BASE_URL}/proxy?url=${encodeURIComponent(thumbnailUrl)}`} 
+                          alt={`Post by ${profileData.username}`} 
+                          className={styles.postImage} 
+                        />
+                        <div className={styles.postOverlay}>
+                          <button
+                            onClick={() => handlePostDownload(post)}
+                            disabled={downloadingPostId === post.id}
+                            className={styles.downloadButton}
+                          >
+                            {downloadingPostId === post.id ? 'Baixando...' : 'Baixar'}
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           )}
 
-          {postData && mediaBlobUrl && (
-            <div className={styles.postSection}>
-              {postData.media_type === 'video' ? (
-                <video controls autoPlay src={mediaBlobUrl} className={styles.singleMedia}></video>
-              ) : (
-                <img src={mediaBlobUrl} alt="Instagram Post" className={styles.singleMedia} />
-              )}
-              <div className={styles.buttonGroup}>
-                <button 
-                  onClick={() => handleDownload(mediaBlobUrl, `post_${postData.id}.${postData.media_type === 'video' ? 'mp4' : 'jpg'}`)}
-                  className={`${styles.downloadButton} ${styles.singleDownloadButton}`}
-                >
-                  Baixar Mídia
-                </button>
-                {postData.media_type === 'video' && (
-                  <button
-                    onClick={() => handleConvertToAudio(postData.media_url, 'instagram')}
-                    disabled={isConverting || isMediaLoading}
-                    className={`${styles.downloadButton} ${styles.singleDownloadButton} ${styles.convertButton}`}
-                  >
-                    {isConverting ? 'Convertendo...' : 'Extrair Áudio (MP3)'}
-                  </button>
-                )}
-              </div>
-            </div>
+          {postData && (
+            <InstagramPost 
+              postData={postData} 
+              profileData={profileData} 
+              onDownload={handleDownload} 
+            />
           )}
 
           {tiktokData && mediaBlobUrl && (

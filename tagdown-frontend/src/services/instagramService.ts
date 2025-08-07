@@ -2,93 +2,45 @@ import { auth } from './firebaseService';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 
-const getHeaders = () => {
-  const headers = new Headers();
+export const fetchInstagramData = async (input: string): Promise<any> => {
   const user = auth.currentUser;
-
+  const headers = new Headers();
   if (user) {
     headers.append('x-user-id', user.uid);
   }
 
-  return headers;
-};
-
-export const getProfileData = async (username: string) => {
-  const url = `${BASE_URL}/instagram-profile?username=${username}`;
-  const headers = getHeaders();
-
-  try {
-    const response = await fetch(url, { headers });
-    if (response.status === 429) {
-      throw new Error('Too Many Requests');
-    }
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-    throw error;
+  let url;
+  // Verifica se o input é uma URL do Instagram
+  if (input.includes('instagram.com/p/') || input.includes('instagram.com/reel/')) {
+    // É uma URL de post
+    url = `${BASE_URL}/instagram-post-dl?url=${encodeURIComponent(input)}`;
+  } else if (input.includes('instagram.com/')) {
+    // É uma URL de perfil
+    const username = input.substring(input.lastIndexOf('/') + 1);
+    url = `${BASE_URL}/instagram-profile?username=${username}`;
+  } else {
+    // Trata como nome de usuário
+    url = `${BASE_URL}/instagram-profile?username=${input}`;
   }
-};
-
-export const getPostDownloadLink = async (postUrl: string) => {
-  const url = `${BASE_URL}/instagram-post-dl?url=${encodeURIComponent(postUrl)}`;
-  const headers = getHeaders();
 
   try {
     const response = await fetch(url, { headers });
-    if (response.status === 429) {
-      throw new Error('Too Many Requests');
-    }
     if (!response.ok) {
-      throw new Error('Network response was not ok for post-dl');
+      if (response.status === 429) {
+        throw new Error('Too Many Requests');
+      }
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      } else {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP error! status: ${response.status}`);
+      }
     }
-    const result = await response.json();
-    return result;
+    return await response.json();
   } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const getPostInfo = async (postUrl: string) => {
-  const url = `${BASE_URL}/instagram-post-info?url=${encodeURIComponent(postUrl)}`;
-  const headers = getHeaders();
-
-  try {
-    const response = await fetch(url, { headers });
-    if (response.status === 429) {
-      throw new Error('Too Many Requests');
-    }
-    if (!response.ok) {
-      throw new Error('Network response was not ok for post');
-    }
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
-    throw error;
-  }
-};
-
-export const getUserPosts = async (username: string) => {
-  const url = `${BASE_URL}/instagram-posts?username=${username}`;
-  const headers = getHeaders();
-
-  try {
-    const response = await fetch(url, { headers });
-    if (response.status === 429) {
-      throw new Error('Too Many Requests');
-    }
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const result = await response.json();
-    return result;
-  } catch (error) {
-    console.error(error);
+    console.error("Error fetching Instagram data:", error);
     throw error;
   }
 };

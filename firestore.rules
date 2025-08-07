@@ -4,7 +4,7 @@ service cloud.firestore {
     // Permite que qualquer usuário autenticado crie um registro de login.
     // Ninguém pode ler, atualizar ou deletar registros de login diretamente.
     match /login/{loginId} {
-      allow create: if request.auth != null;
+      allow create: if true;
       allow read, update, delete: if false;
     }
 
@@ -24,6 +24,12 @@ service cloud.firestore {
     // Permite que um usuário leia e escreva seu próprio histórico de conversas.
     match /conversations/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Regras para contagem de requisições
+    // Permite que o backend leia e escreva os dados de contagem de requisições.
+    match /user_requests/{requestId} {
+      allow read, write: if true;
     }
   }
 }

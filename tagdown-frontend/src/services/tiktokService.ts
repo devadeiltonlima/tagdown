@@ -20,12 +20,18 @@ export const getTikTokVideo = async (videoUrl: string) => {
   try {
     const response = await fetch(url, { headers });
 
-    if (response.status === 429) {
-      throw new Error('Too Many Requests');
-    }
-
     if (!response.ok) {
-      throw new Error('Network response was not ok');
+      if (response.status === 429) {
+        throw new Error('Too Many Requests');
+      }
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.indexOf("application/json") !== -1) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      } else {
+        const errorText = await response.text();
+        throw new Error(errorText || `HTTP error! status: ${response.status}`);
+      }
     }
 
     return response.json();

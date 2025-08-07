@@ -1,0 +1,129 @@
+.postContainer {
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  background-color: #fff;
+  max-width: 470px;
+  margin: 20px auto;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.postHeader {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  border-bottom: 1px solid #dbdbdb;
+}
+
+.profilePic {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  margin-right: 12px;
+}
+
+.postHeader strong {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.mediaContainer {
+  position: relative;
+  overflow: hidden;
+}
+
+.mediaSlider {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.mediaItem {
+  flex: 0 0 100%;
+  width: 100%;
+}
+
+.media {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #262626;
+  z-index: 10;
+}
+
+.prev {
+  left: 10px;
+}
+
+.next {
+  right: 10px;
+}
+
+.postActions {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+}
+
+.leftActions, .rightActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #262626;
+}
+
+.postCaption {
+  color: #262626;
+  padding: 0 16px 16px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.postCaption strong {
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.postCaption p {
+  display: inline;
+  margin: 0;
+}
+
+.captionContainer {
+  padding: 0 16px 16px;
+}
+
+.hashtagsContainer {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hashtag {
+  color: #055f2b;
+  font-weight: 500;
+}
+
+.copyButton {
+  background: none;
+  border: none;
+  color: #8e8e8e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 0 0;
+  font-size: 12px;
+}
